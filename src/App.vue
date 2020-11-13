@@ -2,17 +2,29 @@
   <div id="app">
     <Index />
     <Temp />
+    <Pm />
+    <Humidtiy />
+    <Air />
+    <Map />
   </div>
 </template>
 <script lang="ts">
 import Vue from "vue";
-import Index from "@/views/index.vue";
+import Index from "@/components/index.vue";
 import Temp from "@/components/temprature.vue";
+import Pm from "@/components/pm.vue";
+import Humidtiy from "@/components/humiditiy.vue";
+import Air from "@/components/airRate.vue";
+import Map from "@/components/map.vue";
 export default Vue.extend({
   name: "App",
   components: {
     Index,
     Temp,
+    Pm,
+    Humidtiy,
+    Air,
+    Map,
   },
   async created() {
     let cityone = this.axios.get("data/changzhou.json");
@@ -39,4 +51,18 @@ export default Vue.extend({
 </script>
 <style lang="scss">
 @import "@/assets/css/global.scss";
+#app {
+  display: grid;
+  grid-template-rows: repeat(3, 1fr);
+  grid-template-columns: repeat(2, 1fr);
+  row-gap: 20px;
+}
+@media (max-width: 1200px) {
+  #app {
+    display: grid;
+    grid-template-rows: repeat(6, 1fr);
+    grid-template-columns: repeat(1, 1fr);
+    row-gap: 20px;
+  }
+}
 </style>
