@@ -31,6 +31,7 @@
             "#76f2f2"
         ],
         // "backgroundColor": "rgba(41,52,65,1)",
+        "backgroundColor": " #222733",
         "textStyle": {},
         "title": {
             "textStyle": {
