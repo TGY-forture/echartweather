@@ -33,32 +33,52 @@ export default Vue.extend({
         title: {
           show: true,
           text: "最高温度和最低温度",
+          left: "5%",
+          top: "2%",
         },
         grid: {
           show: false,
+          top: "25%",
+        },
+        tooltip: {
+          trigger: "axis",
+          axisPointer: {
+            type: "line",
+            z: 0,
+            lineStyle: {
+              width: 30,
+              color: "#2d3443",
+            },
+          },
         },
         series: [
           {
-            name: "gaowen",
+            name: "低温",
             type: "bar",
             data: low,
+            itemStyle: {
+              barBorderRadius: [6, 6, 0, 0],
+            },
           },
           {
-            name: "diwen",
+            name: "高温",
             type: "bar",
             data: high,
+            itemStyle: {
+              barBorderRadius: [6, 6, 0, 0],
+            },
           },
         ],
         legend: {
           show: true,
+          top: 20,
           icon: "circle",
-          data: ["diwen", "gaowen"],
+          data: ["低温", "高温"],
         },
         xAxis: {
           name: "日期",
           type: "category",
           data: this.date,
-          // boundaryGap: false,
           axisTick: {
             show: false,
           },
@@ -83,8 +103,11 @@ export default Vue.extend({
 });
 </script>
 <style lang="scss">
-.lowhigh {
-  width: 600px;
-  height: 300px;
+.temp {
+  .lowhigh {
+    margin: 0 auto;
+    width: 600px;
+    height: 300px;
+  }
 }
 </style>
