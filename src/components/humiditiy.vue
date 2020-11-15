@@ -11,18 +11,32 @@ import "../assets/js/chalk";
 import { mapGetters } from "vuex";
 export default Vue.extend({
   name: "Humidtity",
+  data() {
+    return {
+      chart: null,
+      timer: null,
+    };
+  },
   computed: {
     ...mapGetters(["cityName", "currHumidity"]),
   },
+  watch: {
+    currHumidity: function () {
+      if (this.timer) {
+        clearTimeout((this as any).timer);
+      }
+      (this as any).timer = setTimeout(() => {
+        this.updateChart();
+      }, 800);
+    },
+  },
   mounted() {
-    setTimeout(() => {
-      this.init();
-    }, 3000);
+    this.init();
   },
   methods: {
     init() {
       let el = this.$refs.humidtity;
-      let mychart = echarts.init(el, "chalk");
+      this.chart = echarts.init(el, "chalk");
       let option = {
         title: {
           show: true,
@@ -68,7 +82,6 @@ export default Vue.extend({
           name: "城市",
           type: "category",
           data: this.cityName,
-          // boundaryGap: false,
           axisTick: {
             show: false,
           },
@@ -77,7 +90,20 @@ export default Vue.extend({
           },
         },
       };
-      mychart.setOption(option);
+      (this as any).chart.setOption(option);
+    },
+    updateChart() {
+      let noption = {
+        series: [
+          {
+            data: this.currHumidity,
+          },
+        ],
+        yAxis: {
+          data: this.cityName,
+        },
+      };
+      (this as any).chart.setOption(noption);
     },
   },
 });

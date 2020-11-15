@@ -5,9 +5,9 @@ import store from './store'
 
 import axios from 'axios'
 import VueAxios from 'vue-axios'
+import animated from 'animate.css'
+Vue.use(animated)
 Vue.use(VueAxios, axios)
-
-axios.defaults.baseURL = 'http://localhost:8081/'
 
 Vue.config.productionTip = false
 

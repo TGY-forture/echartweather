@@ -8,58 +8,55 @@ import Vue from "vue";
 import { mapGetters } from "vuex";
 import echarts from "echarts";
 import "../assets/js/chalk";
-import "../assets/js/westeros";
 export default Vue.extend({
   name: "Index",
   data() {
     return {
-      sourcedata: null,
-      xdata: [],
-      ydata: [],
-    };
-  },
-  computed: {
-    ...mapGetters(["aqi", "date", "cityName"]),
-  },
-  mounted() {
-    setTimeout(() => {
-      this.initEcharts();
-    }, 2000);
-  },
-  methods: {
-    initEcharts() {
-      const colorArr1 = [
+      currindex: 1,
+      curraqi: [],
+      timer: null,
+      mychart: null,
+      colorArr1: [
         "rgba(11, 168, 44, 0.5)",
         "rgba(44, 110, 255, 0.5)",
         "rgba(22, 242, 217, 0.5)",
         "rgba(254, 33, 30, 0.5)",
         "rgba(250, 105, 0, 0.5)",
-      ];
-      const colorArr2 = [
+      ],
+      colorArr2: [
         "rgba(11, 168, 44, 0)",
         "rgba(44, 110, 255, 0)",
         "rgba(22, 242, 217, 0)",
         "rgba(254, 33, 30, 0)",
         "rgba(250, 105, 0, 0)",
-      ];
+      ],
+    };
+  },
+  computed: {
+    ...mapGetters(["aqi", "date", "cityName"]),
+  },
+  created() {
+    (this as any).timer = setInterval(() => {
+      this.currindex++;
+      if (this.currindex == 5) {
+        this.currindex = 0;
+      }
+      this.curraqi = this.aqi[this.currindex];
+      this.updateChart();
+    }, 3000);
+  },
+  mounted() {
+    this.initEcharts();
+  },
+  destroyed() {
+    clearInterval((this as any).timer);
+  },
+  methods: {
+    initEcharts() {
       let el = this.$refs.lowtem;
-      let mychart = echarts.init(el, "chalk");
-      let series = this.aqi.map((val: number, index: number) => {
-        let tmp = {
-          name: this.cityName[index],
-          type: "line",
-          data: this.aqi[index],
-          stack: "cas",
-          smooth: true,
-          areaStyle: {
-            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-              { offset: 0, color: colorArr1[index] },
-              { offset: 1, color: colorArr2[index] },
-            ]),
-          },
-        };
-        return tmp;
-      });
+      this.mychart = echarts.init(el, "chalk");
+      this.curraqi = this.aqi[this.currindex];
+
       let option = {
         title: {
           show: true,
@@ -71,12 +68,25 @@ export default Vue.extend({
           show: false,
           top: "25%",
         },
-        series,
+        series: [
+          {
+            name: this.cityName[this.currindex],
+            type: "line",
+            data: this.curraqi,
+            smooth: true,
+            areaStyle: {
+              color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                { offset: 0, color: this.colorArr1[this.currindex] },
+                { offset: 1, color: this.colorArr2[this.currindex] },
+              ]),
+            },
+          },
+        ],
         legend: {
           show: true,
           top: 20,
           icon: "roundRect",
-          data: this.cityName,
+          data: [this.cityName[this.currindex]],
         },
         xAxis: {
           name: "日期",
@@ -98,7 +108,27 @@ export default Vue.extend({
           },
         },
       };
-      mychart.setOption(option);
+      (this as any).mychart.setOption(option);
+    },
+    updateChart() {
+      let noption = {
+        legend: {
+          data: [this.cityName[this.currindex]],
+        },
+        series: [
+          {
+            name: this.cityName[this.currindex],
+            data: this.curraqi,
+            areaStyle: {
+              color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                { offset: 0, color: this.colorArr1[this.currindex] },
+                { offset: 1, color: this.colorArr2[this.currindex] },
+              ]),
+            },
+          },
+        ],
+      };
+      (this as any).mychart.setOption(noption);
     },
   },
 });
