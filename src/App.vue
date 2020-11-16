@@ -1,6 +1,5 @@
 <template>
   <div id="app" v-if="chart">
-    <!-- <div class="pagetitile">djkkkkkkkkkkkkkkkkkddddddddddddd</div> -->
     <Map />
     <Index />
     <Temp />
